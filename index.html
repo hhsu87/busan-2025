@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>釜山行 2025 | Busan Trip</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #F2F4F8;
+            -webkit-tap-highlight-color: transparent;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        .font-kr { font-family: 'Noto Sans KR', sans-serif; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .text-shadow-sm { text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        
+        .mask-gradient {
+            background: linear-gradient(to top, 
+                rgba(15, 23, 42, 1) 0%, 
+                rgba(15, 23, 42, 0.95) 25%, 
+                rgba(15, 23, 42, 0.6) 50%, 
+                rgba(15, 23, 42, 0.2) 75%, 
+                transparent 100%);
+        }
+        
+        .bg-fallback {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+
+        /* IOS Toggle Switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #3b82f6;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        // --- Icons ---
+        const Icon = ({ path, size = 16, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                {path}
+            </svg>
+        );
+
+        const Icons = {
+            MapPin: (props) => <Icon {...props} path={<><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></>} />,
+            Navigation: (props) => <Icon {...props} path={<polygon points="3 11 22 2 13 21 11 13 3 11"/>} />,
+            Shopping: (props) => <Icon {...props} path={<><path d="M16 10a4 4 0 0 1-8 0"/><path d="M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/></>} />,
+            Utensils: (props) => <Icon {...props} path={<><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></>} />,
+            Camera: (props) => <Icon {...props} path={<><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></>} />,
+            Train: (props) => <Icon {...props} path={<><rect width="16" height="16" x="4" y="3" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="M8 15h0"/><path d="M16 15h0"/></>} />,
+            CloudSun: (props) => <Icon {...props} path={<><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/></>} />,
+            Calendar: (props) => <Icon {...props} path={<><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></>} />,
+            CheckSquare: (props) => <Icon {...props} path={<><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></>} />,
+            Briefcase: (props) => <Icon {...props} path={<><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></>} />,
+            Plane: (props) => <Icon {...props} path={<path d="M2 12h5l2 5h7a4 4 0 0 0 0-8h-7l-2 5H2l2-2-2-2Z"/>} />,
+            Hotel: (props) => <Icon {...props} path={<><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></>} />,
+            Sun: (props) => <Icon {...props} path={<><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></>} />,
+            CloudRain: (props) => <Icon {...props} path={<><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/></>} />,
+            Wind: (props) => <Icon {...props} path={<><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></>} />,
+            Info: (props) => <Icon {...props} path={<><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></>} />,
+            Lightbulb: (props) => <Icon {...props} path={<><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-1 1.5-2.4 1.5-3.8 0-3.2-2.8-5.7-6-5.7s-6 2.5-6 5.7c0 1.4.5 2.8 1.5 3.8.8.8 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></>} />,
+            Car: (props) => <Icon {...props} path={<><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M22 17H2"/></>} />,
+            Walk: (props) => <Icon {...props} path={<><path d="m9 20 3-6 3 6"/><path d="M6 17l4.1-11a3 3 0 0 1 2.6-1.9c1.7 0 3 1.3 3 3l-1.6 4.3"/><circle cx="12" cy="2" r="2"/></>} />,
+            Ship: (props) => <Icon {...props} path={<><path d="M2 17h20"/><path d="M22 17c0 3-5 5-10 5S2 20 2 17"/><path d="M12 2v15"/><path d="m9 6 3-3 3 3"/><path d="M4 11h16"/></>} />,
+            Coffee: (props) => <Icon {...props} path={<><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></>} />,
+            Copy: (props) => <Icon {...props} path={<><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>} />,
+            Calculator: (props) => <Icon {...props} path={<><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="18" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></>} />,
+            BookOpen: (props) => <Icon {...props} path={<><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></>} />,
+        };
+
+        // --- IMAGES ---
+        const IMAGES = {
+          busan_night: "https://images.unsplash.com/photo-1629854447682-179621b44d75?auto=format&fit=crop&w=800&q=80",
+          light_festival: "https://korea.stripes.com/travel/1a0syn-haeundae-lights-fest-haps-korea-magazine.jpg/alternates/LANDSCAPE_910/Haeundae-Lights-Fest-Haps-Korea-Magazine.jpg?auto=format&fit=crop&w=800&q=80",
+          busan_pass: "https://www.visitbusanpass.com/_nuxt/img/signiture-time.a592fb1.png?auto=format&fit=crop&w=800&q=80",
+          airport: "https://cdn.dabanews.co.kr/news/photo/202012/img_2363_0.jpg?auto=format&fit=crop&w=800&q=80",
+          hotel: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80",
+          pork_soup: "https://media.triple.guide/triple-cms/c_limit,f_auto,h_1024,w_1024/0e8701cf-01ff-4cb6-b09f-eb931b67d600.jpeg?auto=format&fit=crop&w=800&q=80",
+          abalone_porridge: "https://angelababy0822.com/wp-content/uploads/2025/02/DSC03888.jpg?auto=format&fit=crop&w=800&q=80",
+          korean_breakfast: "https://www.visitbusan.net/uploadImgs/files/cntnts/20240419130448939_wufrotr?type=w420?auto=format&fit=crop&w=800&q=80",
+          seafood: "https://media.triple.guide/triple-cms/c_limit,f_auto,h_1024,w_1024/bfdedddd-062e-4e58-997a-ae49bdf75c58.jpeg?auto=format&fit=crop&w=800&q=80",
+          bread: "https://media.triple.guide/triple-cms/c_limit,f_auto,h_2048,w_2048/330279e3-6304-4228-b0da-6d3023754bc4.jpeg?auto=format&fit=crop&w=800&q=80",
+          ops: "https://tong.visitkorea.or.kr/cms/resource/91/1860891_image2_1.jpg?auto=format&fit=crop&w=800&q=80",
+          bbq: "https://ugc-images.catchtable.co.kr/catchtable/shopinfo/sPeuhTeeC0EYxqxfFnhoT4w/dd923cb74b474242a0a57a77b2e02062?details500?auto=format&fit=crop&w=800&q=80",
+          cafe: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=800&q=80",
+          market: "https://blog-static.kkday.com/zh-tw/blog/wp-content/uploads/Korea_Busan_Jagalchi-market_Ashutterstock_1031141155.jpg?auto=format&fit=crop&w=800&q=80",
+          temple: "https://tong.visitkorea.or.kr/cms/resource/35/3499335_image2_1.jpg?auto=format&fit=crop&w=800&q=80",
+          luge: "https://blog-static.kkday.com/ko/blog/wp-content/uploads/busan_skylineluge_6.jpeg?auto=format&fit=crop&w=800&q=80",
+          train: "https://www.busan.com/nas/wcms/wcms_data/photos/2023/06/21/2023062117553356640_l.jpg?auto=format&fit=crop&w=800&q=80",
+          sky_view: "https://image.kkday.com/v2/image/get/c_fit%2Cq_55%2Ct_webp%2Cw_960/s1.kkday.com/product_105514/20201117075353_lT74f/jpg?auto=format&fit=crop&w=800&q=80",
+          sauna: "https://image.kkday.com/v2/image/get/c_fit%2Cq_55%2Ct_webp%2Cw_960/s1.kkday.com/product_158792/20250905042111_8KqDx/jpg?auto=format&fit=crop&w=800&q=80",
+          yacht: "https://www.visitbusan.net/uploadImgs/files/cntnts/20200723104150193_wufrotr?auto=format&fit=crop&w=800&q=80",
+          gamcheon: "https://www.visitbusan.net/uploadImgs/files/cntnts/20191229142305192_oen?auto=format&fit=crop&w=800&q=80",
+          cable_car: "https://www.visitbusanpass.com/btp/20230302/84832d9a-7f7c-4b57-8702-9abcdd1d488b.jpeg?auto=format&fit=crop&w=800&q=80",
+          christmas: "https://d12zq4w4guyljn.cloudfront.net/750_750_20230116033941909_photo_bd9ab61146f8.webp?auto=format&fit=crop&w=800&q=80",
+          shopping: "https://img.traveltriangle.com/blog/wp-content/uploads/2019/07/Busan-Shopping-cover.jpg?auto=format&fit=crop&w=800&q=80",
+          taxi: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=800&q=80",
+          walking: "https://www.visitbusan.net/uploadImgs/files/cntnts/20191225173723870_oen?auto=format&fit=crop&w=800&q=80",
+          coffee_champ: "https://visitbusan.net/uploadImgs/files/cntnts/20250515123504117_wufrotr?w=900&h=500&s=1?auto=format&fit=crop&w=800&q=80",
+          mansion: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZfk0n-iL0p7_hxsM341Bdw5iUriZiheLAdg&s?auto=format&fit=crop&w=800&q=80",
+          biff: "https://tong.visitkorea.or.kr/cms/resource/83/2364283_image2_1.jpg?auto=format&fit=crop&w=800&q=80",
+          salad: "https://images.happycow.net/venues/1024/45/55/hcmp455524_3343454.jpeg",
+          noodle: "https://img.siksinhot.com/story/1501029268344654.jpg?auto=format&fit=crop&w=800&q=80",
+          breakfast02: "https://danielfooddiary.com/wp-content/uploads/2017/09/seoulisaactoast1.jpg?auto=format&fit=crop&w=800&q=80",
+          museum1: "https://tong.visitkorea.or.kr/cms/resource/24/2816424_image2_1.jpg",
+          jeju_ga: "https://alinalife.tw/webp/wp-content/uploads/2019/06/DSCF4019.jpg.webp"
+        };
+
+        const TRIP_DATA = {
+          info: {
+            flights: [
+              { type: "去程", date: "12/20 (六)", code: "BR164", route: "TPE 14:25 → PUS 17:40", note: "機場接送 10:45" },
+              { type: "回程", date: "12/26 (五)", code: "BR163", route: "PUS 18:55 → TPE 20:25", note: "15:30 需前往機場 | 台灣接送 21:30" }
+            ],
+            hotels: [
+              { 
+                name: "Sunset Hotel (海雲台)", 
+                period: "12/20 - 12/23", 
+                area: "海雲台", 
+                address: "9F, 46, Gunam-ro, Haeundae-gu",
+                krName: "선셋호텔",
+                krAddr: "부산 해운대구 구남로 46 웨이브타운 9층",
+                link: "https://naver.me/xRhEbMMC"
+              },
+              { 
+                name: "Solaria Nishitetsu Hotel (西面)", 
+                period: "12/23 - 12/26", 
+                area: "西面", 
+                address: "20, Seomyeon-ro, Busanjin-gu",
+                krName: "솔라리아니시테츠호텔부산",
+                krAddr: "부산 부산진구 서면로 20",
+                link: "https://naver.me/xnh1XXCS"
+              }
+            ],
+            preTrip: [
+              { task: "預約膠囊列車 (青沙浦→尾浦)", done: false },
+              { task: "預約遊艇", done: false },
+              { task: "填寫電子入境卡 (Q-Code)", note: "出發前72小時內", done: false }
+            ],
+            packing: [
+              "護照正本 & 影本", "訂房憑證 (列印)", "Busan Pass 憑證", "信用卡 (2-3張)", "台幣 & 韓幣現金",
+              "轉接頭 (兩孔圓形)", "行動電源 (必帶)", "網卡/eSIM",
+              "防風羽絨外套 (0-8度)", "發熱衣褲", "毛帽/圍巾/手套", "墨鏡", "好走的鞋",
+              "個人藥品/痠痛貼布", "身體乳液/護手霜 (極乾)", "牙刷牙膏"
+            ]
+          },
+          days: [
+            {
+              id: 1,
+              date: "12/20 (六)",
+              title: "抵達、領卡與海雲台晚餐",
+              weather: { temp: "4°C - 11°C", condition: "Clear", icon: "moon" },
+              activities: [
+                { time: "17:40", type: "transport", title: "抵達釜山金海機場", desc: "入境後前往 Gate 2-3 之間", image: IMAGES.airport },
+                { time: "18:40", type: "spot", title: "【領卡】Busan Pass", location: "機場旅遊諮詢處", desc: "務必領取實體卡再出機場", transport: "步行", tags: ["重要"], image: IMAGES.busan_pass },
+                { 
+                  time: "19:00", type: "transport", title: "機場 → 海雲台", 
+                  desc: "週六晚上易塞車", 
+                  transport: "Taxi (約60分)", 
+                  krName: "선셋호텔", 
+                  krAddr: "부산 해운대구 구남로 46 웨이브타운 9층", 
+                  link: "https://naver.me/xRhEbMMC", 
+                  image: IMAGES.taxi 
+                },
+                { time: "20:30", type: "food", title: "晚餐：海雲台選擇", location: "海雲台", 
+                  image: IMAGES.pork_soup,
+                  transport: "步行 (飯店旁)",
+                  options: [
+                    { name: "Plan A: 密陽血腸豬肉湯飯", desc: "湯頭濃郁乳白，觀光客首選", krName: "밀양순대돼지국밥", link: "https://naver.me/5T4ABsWP", tags: ["觀光客首選"] },
+                    { name: "Plan B: 海雲台竝川血腸湯飯", desc: "湯頭清爽，在地人多", krName: "병천순대국밥", link: "https://naver.me/5D8tb8PG" },
+                    { name: "Plan C: 海雲台傳統市場", desc: "名家盲鰻、尚國家辣炒年糕、糖餅", krName: "해운대전통시장", link: "https://naver.me/GGC1Nte8" }
+                  ]
+                },
+                { 
+                  time: "21:30", 
+                  type: "spot", 
+                  title: "海雲台光之慶典", 
+                  location: "海雲台沙灘", 
+                  desc: "散步消化，欣賞燈光秀",
+                  transport: "步行 (飯店門口)",
+                  image: IMAGES.light_festival
+                }
+              ]
+            },
+            {
+              id: 2,
+              date: "12/21 (日)",
+              title: "膠囊列車與滑車",
+              weather: { temp: "2°C - 10°C", condition: "Sunny", icon: "sun" },
+              activities: [
+                { time: "08:30", type: "food", title: "早餐：鮑魚粥", location: "機張/海雲台", 
+                  transport: "Taxi (約20分)",
+                  image: IMAGES.abalone_porridge,
+                  options: [
+                    { name: "Plan A: 大海鮑魚粥", desc: "海味超濃", krName: "바다마루 전복죽", krAddr: "기장군 기장읍 연화10", link: "https://naver.me/5ml03xa7", tags: ["海味濃"] },
+                    { name: "Plan B: 元祖鮑魚粥", desc: "飯店旁，若不想跑遠", krName: "원조전복죽 본점", link: "https://naver.me/5Q373T5s" }
+                  ]
+                },
+                { 
+                  time: "10:00", 
+                  type: "spot", 
+                  title: "海東龍宮寺", 
+                  location: "機張", 
+                  desc: "韓國唯一建在海邊的寺廟，風景極佳", 
+                  transport: "Taxi (約15分)",
+                  krName: "해동용궁사",
+                  krAddr: "부산 기장군 기장읍 용궁길 86",
+                  link: "https://naver.me/58NdWaSm", 
+                  tags: ["風景極佳"],
+                  image: IMAGES.temple
+                },
+                { 
+                  time: "11:30", 
+                  type: "spot", 
+                  title: "Skyline Luge 滑車", 
+                  location: "機張", 
+                  desc: "玩2次 (Busan Pass)", 
+                  transport: "Taxi (3分)",
+                  krName: "스카이라인루지 부산",
+                  krAddr: "부산 기장군 기장읍 기장해안로 205",
+                  link: "https://naver.me/IDFUcLWo", 
+                  tags: ["Busan Pass"],
+                  image: IMAGES.luge
+                },
+                { time: "13:00", type: "food", title: "午餐：青沙浦烤貝", location: "青沙浦", 
+                  image: IMAGES.seafood,
+                  options: [
+                    { name: "Plan A: 道熙家海鮮", desc: "海景第一排烤貝", krName: "도희네 조개구이", krAddr: "부산 해운대구 청사포로 157", link: "https://naver.me/xa5Rmpu8" },
+                    { name: "Plan B: 秀敏家", desc: "名氣大", krName: "수민이네", krAddr: "부산 해운대구 청사포로58번길 118", link: "https://naver.me/xhzCN8sM" }
+                  ]
+                },
+                { 
+                  time: "14:30", 
+                  type: "spot", 
+                  title: "膠囊列車 & 海岸列車", 
+                  location: "青沙浦站 → 尾浦", 
+                  desc: "櫻木花道平交道拍照。若買不到膠囊列車，可刷 Pass 搭海岸列車回尾浦。",
+                  krName: "청사포정거장 (青沙浦站)",
+                  krAddr: "부산 해운대구 청사포로 116",
+                  link: "https://naver.me/xq3aEljM", 
+                  tags: ["必拍"],
+                  image: IMAGES.train
+                },
+                { time: "15:00", type: "food", title: "自然島鹽麵包", location: "尾浦站入口對面", desc: "點心時間", transport: "步行", krName: "자연도소금빵&자연도해", tags: ["必吃"], image: IMAGES.bread },
+                { 
+                  time: "15:30", 
+                  type: "spot", 
+                  title: "Busan X the Sky", 
+                  location: "LCT Landmark Tower", 
+                  desc: "釜山最高樓，100樓星巴克", 
+                  transport: "步行",
+                  krName: "부산엑스더스카이",
+                  tags: ["Busan Pass"],
+                  image: IMAGES.sky_view
+                },
+                { time: "17:00", type: "spot", title: "Club D Oasis 汗蒸幕", location: "LCT 5F", transport: "步行", desc: "絕美海景足湯、高級桑拿", krName: "클럽디 오아시스", tags: ["高級桑拿"], image: IMAGES.sauna },
+                { time: "18:00", type: "food", title: "晚餐：海雲台烤肉/湯飯", location: "海雲台",
+                  transport: "Taxi (約5分)",
+                  image: IMAGES.pork_soup,
+                  options: [
+                    { name: "Plan A: Eomyongbaek 豬肉湯飯", desc: "清湯系，肉質鮮嫩", krName: "엄용백 돼지국밥 해운대점", krAddr: "부산 해운대구 구남로24번길 39", link: "https://naver.me/GMmg7amE", tags: ["米其林推薦"] },
+                    { name: "Plan B: 豚舍豚", desc: "濟州厚切烤肉，專人代烤", krName: "돈사돈", krAddr: "부산 부산진구 부전로 47", link: "https://naver.me/F1rt00rB" }
+                  ] 
+                }
+              ]
+            },
+            {
+              id: 3,
+              date: "12/22 (一)",
+              title: "藝術與經典汗蒸幕",
+              weather: { temp: "3°C - 11°C", condition: "Cloudy", icon: "cloud" },
+              activities: [
+                { time: "08:30", type: "food", title: "早餐選擇", 
+                  transport: "步行",
+                  image: IMAGES.korean_breakfast,
+                  options: [
+                    { name: "Plan A: 錦繡河豚湯", desc: "釜山最有名的早餐(24H)", krName: "금수복국", link: "https://naver.me/FRLvctzv", tags: ["有名"] },
+                    { name: "Plan B: 古來思魚糕", desc: "魚糕烏龍麵或炸魚糕", krName: "고래사어묵", link: "https://naver.me/FvEPmQcV" },
+                    { name: "Plan C: Egg Drop", desc: "滑蛋吐司", krName: "에그드랍 해운대점", link: "https://naver.me/FN747zwP" }
+                  ]
+                },
+                { 
+                  time: "09:30", 
+                  type: "spot", 
+                  title: "冬柏島散步", 
+                  location: "冬柏島", 
+                  desc: "APEC 世峰樓 → 人魚像 → The Bay 101",
+                  krName: "동백섬",
+                  transport: "步行",
+                  image: IMAGES.walking
+                },
+                { 
+                  time: "11:30", 
+                  type: "spot", 
+                  title: "新世界百貨午餐", 
+                  location: "新世界百貨", 
+                  desc: "新世界百貨美食街用餐", 
+                  transport: "Taxi (約15分)",
+                  krName: "신세계백화점 센텀시티점",
+                  krAddr: "부산 해운대구 센텀남대로 35 1층",
+                  link: "https://naver.me/5chuGOAf", 
+                  image: IMAGES.market
+                },
+                {
+                  time: "13:30",
+                  type: "spot",
+                  title: "Museum 1",
+                  location: "Museum 1",
+                  desc: "在室內坐著欣賞LED藝術，約停留40-50分鐘",
+                  transport: "步行",
+                  krName: "뮤지엄원",
+                  link: "https://naver.me/GHvq813a",
+                  tags: ["Busan Pass"],
+                  image: IMAGES.museum1
+                },
+                { 
+                  time: "14:30", 
+                  type: "spot", 
+                  title: "Spa Land 汗蒸幕", 
+                  location: "新世界百貨", 
+                  desc: "五星級汗蒸幕，喝甜米釀、吃烤蛋", 
+                  transport: "步行",
+                  krName: "센텀 스파랜드",
+                  link: "https://naver.me/5Q372Aqt", 
+                  tags: ["Busan Pass", "五星級"],
+                  image: IMAGES.sauna
+                },
+                {
+                  time: "15:50",
+                  type: "transport",
+                  title: "移動: 遊艇競技場",
+                  location: "水營灣遊艇競技場",
+                  desc: "前往搭乘遊艇",
+                  transport: "Taxi (約5-10分)",
+                  krName: "수영만요트경기장 (요트홀릭)",
+                  krAddr: "부산 해운대구 해운대해변로 84 4-17b",
+                  link: "https://naver.me/GZZuJ2vd",
+                  image: IMAGES.taxi
+                },
+                { 
+                  time: "16:30", 
+                  type: "spot", 
+                  title: "Yacht Holic 遊艇", 
+                  location: "主要大樓內的4號櫃檯", 
+                  desc: "船會開到廣安大橋下，夕陽時分非常美", 
+                  transport: "搭船",
+                  link: "https://naver.me/GZZuJ2vd", 
+                  tags: ["Busan Pass", "預約"],
+                  image: IMAGES.yacht
+                },
+                { 
+                  time: "18:00", 
+                  type: "food", 
+                  title: "晚餐 廣安里", 
+                  location: "廣安里", 
+                  desc: "廣安大橋夜景",
+                  transport: "步行/Taxi",
+                  image: IMAGES.bbq,
+                  options: [
+                    { name: "Plan A: 金三宅烤肉", desc: "大鍋蓋烤肉，氣氛熱鬧", krName: "철공소 막고기 광안리점", krAddr: "부산 수영구 민락본동로11번길 78-4", link: "https://naver.me/55rmjzyN" },
+                    { name: "Plan B: Nasari 食堂", desc: "海鮮總匯刀削麵，海景座位", krName: "나사리식당 광안점", krAddr: "부산 수영구 광안해변로 151 3층", link: "https://naver.me/FA2xLeaO" }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 4,
+              date: "12/23 (二)",
+              title: "移動日：影島冠軍咖啡",
+              weather: { temp: "1°C - 9°C", condition: "Sunny", icon: "sun" },
+              activities: [
+                { time: "09:30", type: "food", title: "早餐：OPS 麵包店", location: "海雲台", link: "https://naver.me/Fnm0a9Rj", desc: "釜山三大麵包店，推薦大泡芙", krName: "옵스 해운대점", tags: ["三大麵包店"], transport: "步行", image: IMAGES.ops },
+                { 
+                  time: "11:00", type: "hotel", title: "移動至西面飯店", 
+                  location: "Solaria Nishitetsu", 
+                  transport: "Taxi (約40分)",
+                  desc: "寄放行李", 
+                  krName: "솔라리아니시테츠호텔부산", 
+                  krAddr: "부산 부산진구 서면로 20",
+                  link: "https://naver.me/xnh1XXCS", 
+                  image: IMAGES.taxi 
+                },
+                { time: "12:30", type: "food", title: "午餐：西面", 
+                  transport: "步行",
+                  image: IMAGES.korean_breakfast,
+                  options: [
+                    { name: "Plan A: 秀英本家", desc: "24H 豬肉湯飯老店", krName: "수영본가돼지국밥", link: "https://naver.me/F3TXDopz" },
+                    { name: "Plan B: 機張手工刀切麵", desc: "市場內平價 Q 彈麵條", krName: "기장손칼국수", link: "https://naver.me/xtgpECFc" },
+                    { name: "Plan C: 李在模披薩", desc: "必點起司餅皮+烤起司義大利麵", krName: "이재모피자 서면점", link: "https://naver.me/F5D1xjeN" }
+                  ]
+                },
+                { 
+                  time: "14:00", 
+                  type: "cafe", 
+                  title: "MOMOS Coffee", 
+                  location: "影島", 
+                  desc: "世界冠軍咖啡，廢棄船塢改建，空間震撼",
+                  transport: "Taxi (約25分)",
+                  krName: "모모스커피 영도점",
+                  krAddr: "부산 영도구 봉래나루로 160",
+                  link: "https://naver.me/GaldOYuq", 
+                  tags: ["世界冠軍"],
+                  image: IMAGES.coffee_champ
+                },
+                { 
+                  time: "16:00", 
+                  type: "spot", 
+                  title: "白淺灘文化村", 
+                  location: "影島", 
+                  desc: "海邊散步，咖啡廳看海 (Having Moment)",
+                  transport: "Taxi (約10分)",
+                  krName: "흰여울문화마을",
+                  krAddr: "부산 영도구 영선동4가 605-3",
+                  link: "https://naver.me/xLWAPvjS", 
+                  image: IMAGES.gamcheon
+                },
+                { 
+                  time: "18:30", 
+                  type: "shopping", 
+                  title: "南浦洞 / BIFF 廣場", 
+                  location: "南浦洞", 
+                  desc: "必吃元祖黑糖餅",
+                  transport: "Taxi (約15分)",
+                  krName: "남포동 비프광장",
+                  krAddr: "부산 중구 구덕로 44",
+                  link: "https://naver.me/FDnCfOLW", 
+                  tags: ["必吃"],
+                  image: IMAGES.biff
+                },
+                { time: "19:30", type: "food", title: "晚餐：南浦洞", desc: "Plan A: 札嘎其市場 (자갈치시장) / Plan B: 光復路商圈", transport: "步行", image: IMAGES.market }
+              ]
+            },
+            {
+              id: 5,
+              date: "12/24 (三)",
+              title: "甘川洞與平安夜",
+              weather: { temp: "0°C - 8°C", condition: "Clear", icon: "sun" },
+              activities: [
+                { time: "08:30", type: "food", title: "早餐", 
+                  transport: "步行",
+                  image: IMAGES.breakfast02,
+                  options: [
+                    { name: "Plan A: Isaac Toast", desc: "現煎吐司", krName: "이삭토스트 부산롯데서면점", link: "https://naver.me/xyTGk7n5" },
+                    { name: "Plan B: 本粥", desc: "鮑魚粥、南瓜粥", krName: "본죽 서면점", link: "https://naver.me/GubWJ5hw" }
+                  ]
+                },
+                { 
+                  time: "10:00", 
+                  type: "spot", 
+                  title: "甘川洞文化村", 
+                  location: "甘川洞", 
+                  desc: "尋找小王子，逛裝置藝術",
+                  transport: "Taxi (約30分)",
+                  krName: "감천문화마을입구",
+                  link: "https://naver.me/FPn5Lbco", 
+                  image: IMAGES.gamcheon
+                },
+                { 
+                  time: "12:30", 
+                  type: "food", 
+                  title: "午餐：札嘎其市場", 
+                  location: "札嘎其", 
+                  desc: "長腳蟹、生章魚", 
+                  transport: "Taxi (約15分)",
+                  krName: "부산자갈치시장",
+                  krAddr: "부산 중구 자갈치해안로 52",
+                  link: "https://naver.me/xBwJzsdQ", 
+                  tags: ["生鮮"], 
+                  image: IMAGES.seafood 
+                },
+                { 
+                  time: "14:30", 
+                  type: "spot", 
+                  title: "松島海上纜車", 
+                  location: "松島", 
+                  desc: "水晶纜車，龍宮雲橋", 
+                  transport: "Taxi (約10分)",
+                  krName: "송도해상케이블카",
+                  krAddr: "부산 서구 송도해변로 171",
+                  link: "https://naver.me/Fmf6KBhZ", 
+                  tags: ["Busan Pass"],
+                  image: IMAGES.cable_car
+                },
+                { time: "18:30", type: "food", title: "平安夜晚餐", location: "西面", 
+                  transport: "Taxi (約30-40分，車多)",
+                  image: IMAGES.christmas,
+                  options: [
+                    { name: "Plan A: 味贊王鹽烤肉", desc: "厚切肉，小菜好吃", krName: "맛찬들왕소금구이 서면점", krAddr: "부산 부산진구 중앙대로691번가길 24-3", link: "https://naver.me/IxsqWm5D", tags: ["排隊名店"] },
+                    { name: "Plan B: 豚舍豚 西面店", desc: "濟州黑豬肉", krName: "돈사돈 서면", krAddr: "부산 부산진구 부전로 47", link: "https://naver.me/F1rt00rB" }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 6,
+              date: "12/25 (四)",
+              title: "聖誕節：田浦咖啡漫遊",
+              weather: { temp: "1°C - 9°C", condition: "Sunny", icon: "snow" },
+              activities: [
+                { 
+                  time: "10:30", 
+                  type: "food", 
+                  title: "早午餐：Soup or Salad", 
+                  location: "田浦", 
+                  desc: "清爽沙拉/濃湯/三明治，平衡油膩", 
+                  transport: "Taxi",
+                  krName: "수프올샐러드",
+                  krAddr: "부산 부산진구 동성로39번길 7 1층",
+                  link: "https://naver.me/FzSZ70Js", 
+                  image: IMAGES.salad 
+                },
+                { time: "13:00", type: "shopping", title: "西面逛街", location: "西面", desc: "樂天百貨 (롯데백화점)、NC 百貨 (NC백화점)、地下街", transport: "步行", image: IMAGES.shopping },
+                { 
+                  time: "18:00", 
+                  type: "food", 
+                  title: "聖誕晚餐：Old Mansion", 
+                  location: "田浦", 
+                  desc: "紅磚韓屋餐廳，氣氛滿分", 
+                  krName: "올드맨션",
+                  krAddr: "부산 부산진구 전포대로209번길 17-6",
+                  link: "https://naver.me/GoD7vQS0", 
+                  tags: ["氣氛佳"],
+                  image: IMAGES.mansion
+                }
+              ]
+            },
+            {
+              id: 7,
+              date: "12/26 (五)",
+              title: "最後衝刺與返程",
+              weather: { temp: "2°C - 10°C", condition: "Cloudy", icon: "cloud" },
+              activities: [
+                { time: "09:00", type: "food", title: "早餐", 
+                  transport: "步行",
+                  image: IMAGES.jeju_ga,
+                  options: [
+                    { name: "Plan A: 濟州家", desc: "濃郁鮑魚粥、海膽湯", krName: "제주가", krAddr: "부산 부산진구 부전로66번길 36", link: "https://naver.me/F3TJROE7", tags: ["道地"] },
+                    { name: "Plan B: Blackup Coffee", desc: "招牌海鹽咖啡", krName: "블랙업커피 서면본점", krAddr: "부산 부산진구 서전로10번길 41", link: "https://naver.me/FPUh0No7" }
+                  ]
+                },
+                { time: "11:00", type: "hotel", title: "退房", desc: "寄放行李於飯店或車站", transport: "步行", image: IMAGES.hotel },
+                { time: "12:00", type: "shopping", title: "最後採買", location: "西面", desc: "Olive Young, 樂天超市", transport: "步行", image: IMAGES.shopping },
+                { 
+                  time: "14:30", type: "food", title: "午餐：機張手工刀切麵", location: "西面市場", 
+                  desc: "快速好吃", 
+                  transport: "步行",
+                  krName: "기장손칼국수",
+                  krAddr: "부산 부산진구 서면로 56",
+                  link: "https://naver.me/xtgpECFc", 
+                  image: IMAGES.noodle 
+                },
+                { 
+                  time: "15:30", type: "transport", title: "前往機場", location: "金海機場", 
+                  desc: "15:30 前務必上車", 
+                  transport: "Taxi (約50分)",
+                  krName: "김해국제공항 국제선 출발층",
+                  tags: ["重要"], 
+                  image: IMAGES.taxi 
+                }
+              ]
+            }
+          ]
+        };
+
+        const NaverButton = ({ link }) => (
+          <a 
+            href={link} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-green-500 hover:text-white transition-all ml-auto flex-shrink-0 active:scale-95 shadow-lg border border-white/30 z-20"
+            title="Open in Naver Map"
+          >
+            <Icons.Navigation size={14} />
+          </a>
+        );
+
+        const ActivityCard = ({ activity }) => {
+          const getIcon = (type, transport) => {
+            if (transport && transport.includes("船")) return <Icons.Ship size={16} className="text-white" />;
+            
+            switch(type) {
+              case 'food': return <Icons.Utensils size={16} className="text-white" />;
+              case 'cafe': return <Icons.Coffee size={16} className="text-white" />;
+              case 'spot': return <Icons.Camera size={16} className="text-white" />;
+              case 'shopping': return <Icons.Shopping size={16} className="text-white" />;
+              case 'transport': return <Icons.Train size={16} className="text-white" />;
+              case 'hotel': return <Icons.Hotel size={16} className="text-white" />;
+              default: return <Icons.MapPin size={16} className="text-white" />;
+            }
+          };
+
+          const isWalk = activity.transport && activity.transport.includes("步行");
+
+          return (
+            <div className="relative pl-6 pb-12 border-l border-gray-300 last:border-0 last:pb-0">
+              {/* Timeline Icon */}
+              <div className="absolute -left-3 top-0 w-6 h-6 rounded-full bg-gray-900 border-2 border-white shadow-md flex items-center justify-center z-10">
+                {getIcon(activity.type, activity.transport)}
+              </div>
+              
+              {/* Card Container with Background Image */}
+              <div className="group relative rounded-2xl shadow-xl overflow-hidden min-h-[220px] flex flex-col justify-end transition-transform bg-gray-900">
+                
+                {/* Background Image Layer */}
+                <div className="absolute inset-0 z-0">
+                  <div className="absolute inset-0 bg-black/20 z-10"></div> {/* Dimmer */}
+                  <img 
+                    src={activity.image} 
+                    alt={activity.title} 
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-0 transition-opacity"
+                    onLoad={(e) => e.target.classList.remove('opacity-0')}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.parentElement.classList.add('bg-fallback');
+                    }}
+                  />
+                  {/* Strong Gradient Mask for Text Area */}
+                  <div className="absolute inset-0 mask-gradient z-10"></div>
+                </div>
+
+                {/* Content Layer */}
+                <div className="relative z-20 p-5 pt-20">
+                  
+                  <div className="flex justify-between items-start mb-1">
+                    <div>
+                      <span className="text-xs font-bold text-blue-200 tracking-wide block mb-1 drop-shadow-md">{activity.time}</span>
+                      <h3 className="text-xl font-black text-white text-shadow-lg leading-tight tracking-tight">{activity.title}</h3>
+                    </div>
+                    {activity.link && <NaverButton link={activity.link} />}
+                  </div>
+
+                  {activity.location && (
+                    <div className="flex items-center text-xs text-gray-200 mb-3 font-medium drop-shadow-md">
+                      <Icons.MapPin size={12} className="mr-1" />
+                      {activity.location}
+                    </div>
+                  )}
+
+                  {/* Description */}
+                  {activity.desc && (
+                     <div className="mb-3">
+                        <p className="text-sm text-gray-100 leading-relaxed font-medium drop-shadow-md">{activity.desc}</p>
+                     </div>
+                  )}
+
+                  {/* Transport & Taxi Info */}
+                  <div className="flex flex-col gap-2 mb-2">
+                    {/* 交通方式 - 區分 Taxi 與 步行 */}
+                    {activity.transport && (
+                        <div className={`inline-flex items-center backdrop-blur-md rounded-lg px-2 py-1 self-start border ${isWalk ? 'bg-green-600/80 border-green-400/30' : 'bg-blue-600/80 border-blue-400/30'}`}>
+                            {activity.transport.includes("船") ? <Icons.Ship size={14} className="text-white mr-1.5" /> : (isWalk ? <Icons.Walk size={14} className="text-white mr-1.5" /> : <Icons.Car size={12} className="text-white mr-1.5" />)}
+                            <span className="text-xs font-bold text-white">{activity.transport}</span>
+                        </div>
+                    )}
+
+                    {/* 🚕 計程車司機專用卡 (如果有韓文地址) */}
+                    {(activity.krName || activity.krAddr) && (
+                        <div className="mt-1 bg-yellow-400 rounded-lg p-3 text-black shadow-lg border-2 border-yellow-500 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 bg-black text-yellow-400 text-[10px] font-bold px-2 py-0.5 rounded-bl-lg">
+                                司機專用 TAXI
+                            </div>
+                            <div className="font-kr font-bold text-lg leading-tight mb-1 pr-4">{activity.krName}</div>
+                            {activity.krAddr && <div className="font-kr text-xs opacity-80 leading-snug">{activity.krAddr}</div>}
+                        </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap mb-2">
+                    {activity.tags?.map((tag, idx) => <TagBadge key={idx} text={tag} />)}
+                  </div>
+
+                  {/* Guide / Story Section */}
+                  {activity.tips && (
+                    <div className="mt-3 bg-white/10 backdrop-blur-md rounded-lg p-3 border-t border-white/20 shadow-inner">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Icons.Lightbulb size={14} className="text-yellow-300 drop-shadow" />
+                        <span className="text-xs font-bold text-yellow-100 drop-shadow">旅人手札</span>
+                      </div>
+                      <p className="text-xs text-gray-100 leading-relaxed text-justify opacity-95 font-medium">
+                        {activity.tips}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Nested Options (Plan A/B) */}
+                  {activity.options && (
+                    <div className="mt-3 space-y-2">
+                      {activity.options.map((opt, idx) => (
+                        <div key={idx} className="bg-gray-900/80 backdrop-blur-md rounded-lg p-3 border border-white/10 shadow-sm">
+                          <div className="flex justify-between items-start">
+                            <div className="pr-2 w-full">
+                              <div className="text-sm font-bold text-gray-100 flex flex-wrap items-center gap-1">
+                                <span className="text-xs text-blue-300 font-normal mr-1">Plan {String.fromCharCode(65+idx)}</span>
+                                {opt.name}
+                              </div>
+                              <div className="text-xs text-gray-300 mt-1">{opt.desc}</div>
+                              
+                              {/* 司機資訊 (Plan 內) */}
+                              {(opt.krName) && (
+                                <div className="mt-2 bg-yellow-400/90 rounded p-1.5 text-black">
+                                    <div className="font-kr font-bold text-sm">{opt.krName}</div>
+                                    {opt.krAddr && <div className="font-kr text-[10px] opacity-90">{opt.krAddr}</div>}
+                                </div>
+                              )}
+
+                              <div className="flex flex-wrap mt-1.5">
+                                {opt.tags?.map((t, i) => <TagBadge key={i} text={t} />)}
+                              </div>
+                            </div>
+                            {opt.link && <NaverButton link={opt.link} />}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        const WeatherIcon = ({ icon, className }) => {
+          switch (icon) {
+            case 'sun': return <Icons.Sun className={`text-orange-400 ${className}`} />;
+            case 'moon': return <Icons.CloudSun className={`text-indigo-400 ${className}`} />;
+            case 'cloud': return <Icons.CloudRain className={`text-gray-400 ${className}`} />;
+            case 'snow': return <Icons.Wind className={`text-blue-300 ${className}`} />;
+            default: return <Icons.Sun className={`text-orange-400 ${className}`} />;
+          }
+        };
+
+        const TagBadge = ({ text }) => {
+          let colorClass = "bg-white/20 text-white border border-white/10";
+          if (["必吃", "必買", "必拍", "重要", "預約"].some(k => text.includes(k))) colorClass = "bg-rose-600/90 text-white font-bold shadow-md border-rose-400/30";
+          if (text.includes("Busan Pass")) colorClass = "bg-blue-600/90 text-white font-bold shadow-md border-blue-400/30";
+          if (text.includes("首選") || text.includes("冠軍") || text.includes("名店") || text.includes("米其林")) colorClass = "bg-amber-500/90 text-white font-bold shadow-md border-amber-400/30";
+
+          return (
+            <span className={`text-[10px] px-2 py-0.5 rounded-full mr-1.5 mb-1 inline-block backdrop-blur-sm ${colorClass}`}>
+              #{text}
+            </span>
+          );
+        };
+
+        const ToolsView = ({ data }) => {
+          const [checked, setChecked] = useState({});
+
+          const toggleCheck = (item) => {
+            setChecked(prev => ({...prev, [item]: !prev[item]}));
+          };
+
+          return (
+            <div className="pb-24 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              
+              {/* Flight Card */}
+              <section>
+                <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                  <Icons.Plane size={18} className="mr-2 text-blue-500" /> 航班資訊
+                </h2>
+                <div className="grid gap-3">
+                  {data.flights.map((flight, idx) => (
+                    <div key={idx} className="bg-white/70 backdrop-blur-xl rounded-2xl p-4 shadow-sm border border-white/40">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">{flight.type}</span>
+                        <span className="text-sm font-mono text-gray-500">{flight.date}</span>
+                      </div>
+                      <div className="text-lg font-bold text-gray-800">{flight.code}</div>
+                      <div className="text-sm text-gray-600 mt-1">{flight.route}</div>
+                      <div className="text-xs text-orange-500 mt-2 flex items-center">
+                        <Icons.Info size={12} className="mr-1" /> {flight.note}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Hotel Card */}
+              <section>
+                <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                  <Icons.Hotel size={18} className="mr-2 text-indigo-500" /> 住宿資訊
+                </h2>
+                <div className="space-y-3">
+                  {data.hotels.map((hotel, idx) => (
+                    <div key={idx} className="bg-white/70 backdrop-blur-xl rounded-2xl p-4 shadow-sm border border-white/40">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-bold text-gray-800">{hotel.name}</h3>
+                          <p className="text-xs text-gray-500 mt-1">{hotel.period} • {hotel.area}</p>
+                          <p className="text-xs text-gray-400 mt-1">{hotel.address}</p>
+                          
+                          {/* Hotel Taxi Info */}
+                          <div className="mt-2 bg-yellow-50 rounded p-2 border border-yellow-200">
+                            <span className="text-[10px] font-bold text-yellow-600 block mb-0.5">給司機看</span>
+                            <div className="font-kr text-sm font-bold text-gray-800">{hotel.krName}</div>
+                            <div className="font-kr text-xs text-gray-500">{hotel.krAddr}</div>
+                          </div>
+                        </div>
+                        {hotel.link && (
+                           <a 
+                            href={hotel.link} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center w-8 h-8 rounded-full bg-[#03C75A]/10 text-[#03C75A] hover:bg-[#03C75A] hover:text-white transition-colors ml-auto flex-shrink-0 active:scale-95"
+                          >
+                            <Icons.Navigation size={14} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Pre-Trip Tasks */}
+              <section>
+                <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                  <Icons.CheckSquare size={18} className="mr-2 text-green-500" /> 行前任務
+                </h2>
+                <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-2 shadow-sm border border-white/40">
+                  {data.preTrip.map((task, idx) => (
+                    <div 
+                      key={idx} 
+                      onClick={() => toggleCheck(task.task)}
+                      className="flex items-start p-3 border-b border-gray-100 last:border-0 cursor-pointer active:bg-gray-50 rounded-lg"
+                    >
+                      <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center transition-colors ${checked[task.task] ? 'bg-green-500 border-green-500' : 'border-gray-300'}`}>
+                        {checked[task.task] && <div className="w-2.5 h-1.5 border-b-2 border-l-2 border-white rotate-[-45deg] mt-[-2px]" />}
+                      </div>
+                      <div>
+                        <div className={`text-sm ${checked[task.task] ? 'text-gray-400 line-through' : 'text-gray-700'}`}>{task.task}</div>
+                        {task.note && <div className="text-xs text-orange-500 mt-1">{task.note}</div>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Packing List */}
+              <section>
+                <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                  <Icons.Briefcase size={18} className="mr-2 text-amber-500" /> 行李清單
+                </h2>
+                <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-4 shadow-sm border border-white/40 grid grid-cols-2 gap-2">
+                  {data.packing.map((item, idx) => (
+                    <div 
+                      key={idx} 
+                      onClick={() => toggleCheck(item)}
+                      className={`text-xs p-2 rounded-lg border transition-all cursor-pointer ${checked[item] ? 'bg-gray-100 border-transparent text-gray-400' : 'bg-white border-gray-100 text-gray-600'}`}
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+            </div>
+          );
+        };
+
+        const AddressView = ({ data }) => {
+            const [copied, setCopied] = useState(null);
+
+            const handleCopy = (text) => {
+                navigator.clipboard.writeText(text);
+                setCopied(text);
+                setTimeout(() => setCopied(null), 2000);
+            };
+
+            // Extract all locations with Korean addresses
+            const allLocations = useMemo(() => {
+                let locs = [];
+                // Hotels
+                data.info.hotels.forEach(h => {
+                    if (h.krName) locs.push({ date: h.period, name: h.name, krName: h.krName, krAddr: h.krAddr });
+                });
+                
+                // Activities
+                data.days.forEach(day => {
+                    day.activities.forEach(act => {
+                        if (act.krName) {
+                            locs.push({ 
+                                date: day.date.split(' ')[0], 
+                                name: act.title, 
+                                krName: act.krName, 
+                                krAddr: act.krAddr 
+                            });
+                        }
+                        if (act.options) {
+                            act.options.forEach(opt => {
+                                if (opt.krName) {
+                                    locs.push({
+                                        date: day.date.split(' ')[0],
+                                        name: opt.name,
+                                        krName: opt.krName,
+                                        krAddr: opt.krAddr
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+                return locs;
+            }, [data]);
+
+            return (
+                <div className="pb-24 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center px-2">
+                        <Icons.MapPin size={18} className="mr-2 text-rose-500" /> 地址簿 (給司機看)
+                    </h2>
+                    
+                    {allLocations.map((loc, idx) => (
+                        <div key={idx} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex justify-between items-center">
+                            <div className="flex-1 pr-2">
+                                <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded mb-1 inline-block">{loc.date}</span>
+                                <div className="text-sm font-bold text-gray-800 mb-0.5">{loc.name}</div>
+                                <div className="font-kr text-lg font-bold text-blue-600 mb-1">{loc.krName}</div>
+                                {loc.krAddr && <div className="font-kr text-xs text-gray-400">{loc.krAddr}</div>}
+                            </div>
+                            {loc.krAddr && (
+                                <button 
+                                    onClick={() => handleCopy(loc.krAddr)}
+                                    className={`p-2 rounded-full transition-all ${copied === loc.krAddr ? 'bg-green-100 text-green-600' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
+                                >
+                                    <Icons.Copy size={18} />
+                                </button>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+
+        const CalculatorView = () => {
+            const [krw, setKrw] = useState('');
+            const [rate, setRate] = useState(0.023); // Default rate
+
+            return (
+                <div className="pb-24 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center px-2">
+                        <Icons.Calculator size={18} className="mr-2 text-purple-500" /> 匯率計算機
+                    </h2>
+
+                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                        <div className="mb-6">
+                            <label className="block text-xs font-bold text-gray-400 mb-2">韓元 (KRW)</label>
+                            <input 
+                                type="number" 
+                                value={krw}
+                                onChange={(e) => setKrw(e.target.value)}
+                                placeholder="輸入金額"
+                                className="w-full text-3xl font-bold text-gray-800 border-b-2 border-gray-100 focus:border-purple-500 outline-none py-2 placeholder-gray-200"
+                            />
+                        </div>
+
+                        <div className="flex justify-center items-center mb-6">
+                            <div className="bg-gray-50 rounded-full p-2">
+                                <span className="text-xs font-mono text-gray-400">x {rate}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-xs font-bold text-gray-400 mb-2">台幣 (TWD)</label>
+                            <div className="w-full text-4xl font-black text-purple-600 py-2">
+                                {krw ? Math.round(krw * rate).toLocaleString() : 0}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white/50 rounded-xl p-4 text-xs text-gray-500 text-center">
+                        匯率可自行調整，預設為 0.023
+                        <input 
+                            type="number" 
+                            step="0.001"
+                            value={rate} 
+                            onChange={(e) => setRate(e.target.value)}
+                            className="w-16 ml-2 p-1 border rounded text-center bg-white"
+                        />
+                    </div>
+                </div>
+            );
+        };
+
+        function BusanTripApp() {
+          const [activeTab, setActiveTab] = useState('itinerary');
+          const [currentDayId, setCurrentDayId] = useState(1);
+          const [scrolled, setScrolled] = useState(false);
+
+          useEffect(() => {
+            const handleScroll = () => setScrolled(window.scrollY > 20);
+            window.addEventListener('scroll', handleScroll);
+            return () => window.removeEventListener('scroll', handleScroll);
+          }, []);
+
+          const currentDay = TRIP_DATA.days.find(d => d.id === currentDayId);
+
+          return (
+            <div className="min-h-screen bg-[#F2F4F8] text-gray-900 font-sans selection:bg-blue-200 overflow-x-hidden">
+              
+              {/* Dynamic Background */}
+              <div className="fixed inset-0 pointer-events-none z-0">
+                <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-200/40 rounded-full blur-[100px] opacity-60" />
+                <div className="absolute bottom-[-10%] left-[-20%] w-[600px] h-[600px] bg-orange-100/50 rounded-full blur-[120px] opacity-60" />
+              </div>
+
+              {/* Main Content Area */}
+              <main className="relative z-10 max-w-md mx-auto min-h-screen bg-white/30 backdrop-blur-sm shadow-2xl border-x border-white/40">
+                
+                {/* Header */}
+                <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 backdrop-blur-md shadow-sm pt-12 pb-4' : 'bg-transparent pt-14 pb-2'} px-6`}>
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Busan Trip 2025</p>
+                      <h1 className="text-3xl font-black text-gray-800 tracking-tight">
+                        {activeTab === 'itinerary' ? '每日行程' : 
+                         activeTab === 'tools' ? '旅程助手' : 
+                         activeTab === 'address' ? '地址簿' : '計算機'}
+                      </h1>
+                    </div>
+                    {activeTab === 'itinerary' && (
+                      <div className="flex flex-col items-end">
+                        <div className="flex items-center text-gray-600 bg-white/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/40 shadow-sm">
+                          <WeatherIcon icon={currentDay.weather.icon} className="mr-2 w-5 h-5" />
+                          <span className="text-sm font-bold">{currentDay.weather.temp}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </header>
+
+                {/* Content Body */}
+                <div className="px-6 py-4">
+                  
+                  {activeTab === 'itinerary' ? (
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                      
+                      {/* Date Navigator */}
+                      <div className="flex overflow-x-auto pb-6 -mx-6 px-6 scrollbar-hide snap-x">
+                        {TRIP_DATA.days.map((day) => (
+                          <button
+                            key={day.id}
+                            onClick={() => setCurrentDayId(day.id)}
+                            className={`flex-shrink-0 snap-center mr-3 rounded-2xl p-3 w-20 flex flex-col items-center justify-center transition-all duration-300 border ${
+                              currentDayId === day.id 
+                                ? 'bg-gray-800 text-white shadow-lg scale-105 border-transparent' 
+                                : 'bg-white/60 text-gray-400 border-white/40 hover:bg-white/80'
+                            }`}
+                          >
+                            <span className="text-[10px] font-medium opacity-80">{day.date.split(' ')[0]}</span>
+                            <span className="text-xl font-bold mt-1">{day.date.split('(')[1].replace(')', '')}</span>
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Day Title */}
+                      <div className="mb-6">
+                         <h2 className="text-xl font-bold text-gray-700 flex items-center">
+                            <span className="w-1.5 h-6 bg-blue-500 rounded-full mr-3 block"></span>
+                            {currentDay.title}
+                         </h2>
+                      </div>
+
+                      {/* Timeline */}
+                      <div className="pl-3 pb-24">
+                        {currentDay.activities.map((activity, index) => (
+                          <ActivityCard key={index} activity={activity} />
+                        ))}
+                      </div>
+
+                    </div>
+                  ) : activeTab === 'tools' ? (
+                    <ToolsView data={TRIP_DATA.info} />
+                  ) : activeTab === 'address' ? (
+                    <AddressView data={TRIP_DATA} />
+                  ) : (
+                    <CalculatorView />
+                  )}
+
+                </div>
+
+                {/* Bottom Tab Navigation */}
+                <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] max-w-[380px] bg-white/90 backdrop-blur-xl rounded-full shadow-2xl border border-white/50 p-1.5 z-50 flex justify-between items-center text-[10px]">
+                  <button 
+                    onClick={() => setActiveTab('itinerary')}
+                    className={`flex-1 flex flex-col items-center justify-center py-2 rounded-full transition-all duration-300 ${activeTab === 'itinerary' ? 'text-blue-600 font-bold bg-blue-50' : 'text-gray-400 hover:text-gray-600'}`}
+                  >
+                    <Icons.Calendar size={20} className="mb-0.5" />
+                    <span>行程</span>
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('address')}
+                    className={`flex-1 flex flex-col items-center justify-center py-2 rounded-full transition-all duration-300 ${activeTab === 'address' ? 'text-rose-600 font-bold bg-rose-50' : 'text-gray-400 hover:text-gray-600'}`}
+                  >
+                    <Icons.MapPin size={20} className="mb-0.5" />
+                    <span>地址</span>
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('calc')}
+                    className={`flex-1 flex flex-col items-center justify-center py-2 rounded-full transition-all duration-300 ${activeTab === 'calc' ? 'text-purple-600 font-bold bg-purple-50' : 'text-gray-400 hover:text-gray-600'}`}
+                  >
+                    <Icons.Calculator size={20} className="mb-0.5" />
+                    <span>換算</span>
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('tools')}
+                    className={`flex-1 flex flex-col items-center justify-center py-2 rounded-full transition-all duration-300 ${activeTab === 'tools' ? 'text-amber-600 font-bold bg-amber-50' : 'text-gray-400 hover:text-gray-600'}`}
+                  >
+                    <Icons.Briefcase size={20} className="mb-0.5" />
+                    <span>助手</span>
+                  </button>
+                </nav>
+
+              </main>
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<BusanTripApp />);
+    </script>
+</body>
+</html>
