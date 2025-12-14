@@ -23,7 +23,7 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #F2F4F8;
             -webkit-tap-highlight-color: transparent;
-            padding-bottom: env(safe-area-inset-bottom);
+            padding-top: env(safe-area-inset-top);
         }
         
         .font-kr { font-family: 'Noto Sans KR', sans-serif; }
@@ -44,15 +44,6 @@
         
         .bg-fallback {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-        }
-
-        /* IOS Toggle Switch */
-        .toggle-checkbox:checked {
-            right: 0;
-            border-color: #3b82f6;
-        }
-        .toggle-checkbox:checked + .toggle-label {
-            background-color: #3b82f6;
         }
     </style>
 </head>
@@ -81,7 +72,7 @@
             CheckSquare: (props) => <Icon {...props} path={<><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></>} />,
             Briefcase: (props) => <Icon {...props} path={<><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></>} />,
             Plane: (props) => <Icon {...props} path={<path d="M2 12h5l2 5h7a4 4 0 0 0 0-8h-7l-2 5H2l2-2-2-2Z"/>} />,
-            Hotel: (props) => <Icon {...props} path={<><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></>} />,
+            Hotel: (props) => <Icon {...props} path={<><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z"/><path d="m9 22 2-3 2 3"/><path d="M2 11h20"/><path d="M12 11v11"/><path d="M12 6h.01"/><path d="M16 6h.01"/><path d="M8 6h.01"/><path d="M12 16h.01"/><path d="M16 16h.01"/><path d="M8 16h.01"/></>} />,
             Sun: (props) => <Icon {...props} path={<><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></>} />,
             CloudRain: (props) => <Icon {...props} path={<><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/></>} />,
             Wind: (props) => <Icon {...props} path={<><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></>} />,
@@ -118,14 +109,14 @@
           sky_view: "https://image.kkday.com/v2/image/get/c_fit%2Cq_55%2Ct_webp%2Cw_960/s1.kkday.com/product_105514/20201117075353_lT74f/jpg?auto=format&fit=crop&w=800&q=80",
           sauna: "https://image.kkday.com/v2/image/get/c_fit%2Cq_55%2Ct_webp%2Cw_960/s1.kkday.com/product_158792/20250905042111_8KqDx/jpg?auto=format&fit=crop&w=800&q=80",
           yacht: "https://www.visitbusan.net/uploadImgs/files/cntnts/20200723104150193_wufrotr?auto=format&fit=crop&w=800&q=80",
-          gamcheon: "https://www.visitbusan.net/uploadImgs/files/cntnts/20191229142305192_oen?auto=format&fit=crop&w=800&q=80",
+          gamcheon: "https://www.visitbusan.net/uploadImgs/files/cntnts/20191222164810698_oen",
           cable_car: "https://www.visitbusanpass.com/btp/20230302/84832d9a-7f7c-4b57-8702-9abcdd1d488b.jpeg?auto=format&fit=crop&w=800&q=80",
           christmas: "https://d12zq4w4guyljn.cloudfront.net/750_750_20230116033941909_photo_bd9ab61146f8.webp?auto=format&fit=crop&w=800&q=80",
           shopping: "https://img.traveltriangle.com/blog/wp-content/uploads/2019/07/Busan-Shopping-cover.jpg?auto=format&fit=crop&w=800&q=80",
           taxi: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=800&q=80",
           walking: "https://www.visitbusan.net/uploadImgs/files/cntnts/20191225173723870_oen?auto=format&fit=crop&w=800&q=80",
-          coffee_champ: "https://visitbusan.net/uploadImgs/files/cntnts/20250515123504117_wufrotr?w=900&h=500&s=1?auto=format&fit=crop&w=800&q=80",
-          mansion: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZfk0n-iL0p7_hxsM341Bdw5iUriZiheLAdg&s?auto=format&fit=crop&w=800&q=80",
+          coffee_champ: "https://visitbusan.net/uploadImgs/files/cntnts/20250515123504117_wufrotr?w=900&h=500&s=1",
+          mansion: "https://d12zq4w4guyljn.cloudfront.net/750_750_20230816090029_photo_bd9ab61146f8.webp?auto=format&fit=crop&w=800&q=80",
           biff: "https://tong.visitkorea.or.kr/cms/resource/83/2364283_image2_1.jpg?auto=format&fit=crop&w=800&q=80",
           salad: "https://images.happycow.net/venues/1024/45/55/hcmp455524_3343454.jpeg",
           noodle: "https://img.siksinhot.com/story/1501029268344654.jpg?auto=format&fit=crop&w=800&q=80",
@@ -162,7 +153,7 @@
             ],
             preTrip: [
               { task: "預約膠囊列車 (青沙浦→尾浦)", done: false },
-              { task: "預約遊艇", done: false },
+              { task: "預約鑽石灣遊艇", done: false },
               { task: "填寫電子入境卡 (Q-Code)", note: "出發前72小時內", done: false }
             ],
             packing: [
@@ -602,6 +593,29 @@
           </a>
         );
 
+        const WeatherIcon = ({ icon, className }) => {
+          switch (icon) {
+            case 'sun': return <Icons.Sun className={`text-orange-400 ${className}`} />;
+            case 'moon': return <Icons.CloudSun className={`text-indigo-400 ${className}`} />;
+            case 'cloud': return <Icons.CloudRain className={`text-gray-400 ${className}`} />;
+            case 'snow': return <Icons.Wind className={`text-blue-300 ${className}`} />;
+            default: return <Icons.Sun className={`text-orange-400 ${className}`} />;
+          }
+        };
+
+        const TagBadge = ({ text }) => {
+          let colorClass = "bg-white/20 text-white border border-white/10";
+          if (["必吃", "必買", "必拍", "重要", "預約"].some(k => text.includes(k))) colorClass = "bg-rose-600/90 text-white font-bold shadow-md border-rose-400/30";
+          if (text.includes("Busan Pass")) colorClass = "bg-blue-600/90 text-white font-bold shadow-md border-blue-400/30";
+          if (text.includes("首選") || text.includes("冠軍") || text.includes("名店") || text.includes("米其林")) colorClass = "bg-amber-500/90 text-white font-bold shadow-md border-amber-400/30";
+
+          return (
+            <span className={`text-[10px] px-2 py-0.5 rounded-full mr-1.5 mb-1 inline-block backdrop-blur-sm ${colorClass}`}>
+              #{text}
+            </span>
+          );
+        };
+
         const ActivityCard = ({ activity }) => {
           const getIcon = (type, transport) => {
             if (transport && transport.includes("船")) return <Icons.Ship size={16} className="text-white" />;
@@ -747,144 +761,6 @@
           );
         };
 
-        const WeatherIcon = ({ icon, className }) => {
-          switch (icon) {
-            case 'sun': return <Icons.Sun className={`text-orange-400 ${className}`} />;
-            case 'moon': return <Icons.CloudSun className={`text-indigo-400 ${className}`} />;
-            case 'cloud': return <Icons.CloudRain className={`text-gray-400 ${className}`} />;
-            case 'snow': return <Icons.Wind className={`text-blue-300 ${className}`} />;
-            default: return <Icons.Sun className={`text-orange-400 ${className}`} />;
-          }
-        };
-
-        const TagBadge = ({ text }) => {
-          let colorClass = "bg-white/20 text-white border border-white/10";
-          if (["必吃", "必買", "必拍", "重要", "預約"].some(k => text.includes(k))) colorClass = "bg-rose-600/90 text-white font-bold shadow-md border-rose-400/30";
-          if (text.includes("Busan Pass")) colorClass = "bg-blue-600/90 text-white font-bold shadow-md border-blue-400/30";
-          if (text.includes("首選") || text.includes("冠軍") || text.includes("名店") || text.includes("米其林")) colorClass = "bg-amber-500/90 text-white font-bold shadow-md border-amber-400/30";
-
-          return (
-            <span className={`text-[10px] px-2 py-0.5 rounded-full mr-1.5 mb-1 inline-block backdrop-blur-sm ${colorClass}`}>
-              #{text}
-            </span>
-          );
-        };
-
-        const ToolsView = ({ data }) => {
-          const [checked, setChecked] = useState({});
-
-          const toggleCheck = (item) => {
-            setChecked(prev => ({...prev, [item]: !prev[item]}));
-          };
-
-          return (
-            <div className="pb-24 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              
-              {/* Flight Card */}
-              <section>
-                <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
-                  <Icons.Plane size={18} className="mr-2 text-blue-500" /> 航班資訊
-                </h2>
-                <div className="grid gap-3">
-                  {data.flights.map((flight, idx) => (
-                    <div key={idx} className="bg-white/70 backdrop-blur-xl rounded-2xl p-4 shadow-sm border border-white/40">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">{flight.type}</span>
-                        <span className="text-sm font-mono text-gray-500">{flight.date}</span>
-                      </div>
-                      <div className="text-lg font-bold text-gray-800">{flight.code}</div>
-                      <div className="text-sm text-gray-600 mt-1">{flight.route}</div>
-                      <div className="text-xs text-orange-500 mt-2 flex items-center">
-                        <Icons.Info size={12} className="mr-1" /> {flight.note}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Hotel Card */}
-              <section>
-                <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
-                  <Icons.Hotel size={18} className="mr-2 text-indigo-500" /> 住宿資訊
-                </h2>
-                <div className="space-y-3">
-                  {data.hotels.map((hotel, idx) => (
-                    <div key={idx} className="bg-white/70 backdrop-blur-xl rounded-2xl p-4 shadow-sm border border-white/40">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-bold text-gray-800">{hotel.name}</h3>
-                          <p className="text-xs text-gray-500 mt-1">{hotel.period} • {hotel.area}</p>
-                          <p className="text-xs text-gray-400 mt-1">{hotel.address}</p>
-                          
-                          {/* Hotel Taxi Info */}
-                          <div className="mt-2 bg-yellow-50 rounded p-2 border border-yellow-200">
-                            <span className="text-[10px] font-bold text-yellow-600 block mb-0.5">給司機看</span>
-                            <div className="font-kr text-sm font-bold text-gray-800">{hotel.krName}</div>
-                            <div className="font-kr text-xs text-gray-500">{hotel.krAddr}</div>
-                          </div>
-                        </div>
-                        {hotel.link && (
-                           <a 
-                            href={hotel.link} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center w-8 h-8 rounded-full bg-[#03C75A]/10 text-[#03C75A] hover:bg-[#03C75A] hover:text-white transition-colors ml-auto flex-shrink-0 active:scale-95"
-                          >
-                            <Icons.Navigation size={14} />
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Pre-Trip Tasks */}
-              <section>
-                <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
-                  <Icons.CheckSquare size={18} className="mr-2 text-green-500" /> 行前任務
-                </h2>
-                <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-2 shadow-sm border border-white/40">
-                  {data.preTrip.map((task, idx) => (
-                    <div 
-                      key={idx} 
-                      onClick={() => toggleCheck(task.task)}
-                      className="flex items-start p-3 border-b border-gray-100 last:border-0 cursor-pointer active:bg-gray-50 rounded-lg"
-                    >
-                      <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center transition-colors ${checked[task.task] ? 'bg-green-500 border-green-500' : 'border-gray-300'}`}>
-                        {checked[task.task] && <div className="w-2.5 h-1.5 border-b-2 border-l-2 border-white rotate-[-45deg] mt-[-2px]" />}
-                      </div>
-                      <div>
-                        <div className={`text-sm ${checked[task.task] ? 'text-gray-400 line-through' : 'text-gray-700'}`}>{task.task}</div>
-                        {task.note && <div className="text-xs text-orange-500 mt-1">{task.note}</div>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Packing List */}
-              <section>
-                <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
-                  <Icons.Briefcase size={18} className="mr-2 text-amber-500" /> 行李清單
-                </h2>
-                <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-4 shadow-sm border border-white/40 grid grid-cols-2 gap-2">
-                  {data.packing.map((item, idx) => (
-                    <div 
-                      key={idx} 
-                      onClick={() => toggleCheck(item)}
-                      className={`text-xs p-2 rounded-lg border transition-all cursor-pointer ${checked[item] ? 'bg-gray-100 border-transparent text-gray-400' : 'bg-white border-gray-100 text-gray-600'}`}
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-            </div>
-          );
-        };
-
         const AddressView = ({ data }) => {
             const [copied, setCopied] = useState(null);
 
@@ -931,7 +807,7 @@
             }, [data]);
 
             return (
-                <div className="pb-24 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="pb-24 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 pt-6">
                     <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center px-2">
                         <Icons.MapPin size={18} className="mr-2 text-rose-500" /> 地址簿 (給司機看)
                     </h2>
@@ -963,7 +839,7 @@
             const [rate, setRate] = useState(0.023); // Default rate
 
             return (
-                <div className="pb-24 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="pb-24 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pt-6">
                     <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center px-2">
                         <Icons.Calculator size={18} className="mr-2 text-purple-500" /> 匯率計算機
                     </h2>
@@ -1008,6 +884,121 @@
             );
         };
 
+        const ToolsView = ({ data }) => {
+            const [checked, setChecked] = useState({});
+  
+            const toggleCheck = (item) => {
+              setChecked(prev => ({...prev, [item]: !prev[item]}));
+            };
+  
+            return (
+              <div className="pb-24 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pt-6">
+                
+                {/* Flight Card */}
+                <section>
+                  <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                    <Icons.Plane size={18} className="mr-2 text-blue-500" /> 航班資訊
+                  </h2>
+                  <div className="grid gap-3">
+                    {data.flights.map((flight, idx) => (
+                      <div key={idx} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-xs font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded">{flight.type}</span>
+                          <span className="text-sm font-mono text-gray-500">{flight.date}</span>
+                        </div>
+                        <div className="text-lg font-bold text-gray-800">{flight.code}</div>
+                        <div className="text-sm text-gray-600 mt-1">{flight.route}</div>
+                        <div className="text-xs text-orange-500 mt-2 flex items-center">
+                          <Icons.Info size={12} className="mr-1" /> {flight.note}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+  
+                {/* Hotel Card */}
+                <section>
+                  <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                    <Icons.Hotel size={18} className="mr-2 text-indigo-500" /> 住宿資訊
+                  </h2>
+                  <div className="space-y-3">
+                    {data.hotels.map((hotel, idx) => (
+                      <div key={idx} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="font-bold text-gray-800">{hotel.name}</h3>
+                            <p className="text-xs text-gray-500 mt-1">{hotel.period} • {hotel.area}</p>
+                            <p className="text-xs text-gray-400 mt-1">{hotel.address}</p>
+                            
+                            {/* Hotel Taxi Info */}
+                            <div className="mt-2 bg-yellow-50 rounded p-2 border border-yellow-200">
+                              <span className="text-[10px] font-bold text-yellow-600 block mb-0.5">給司機看</span>
+                              <div className="font-kr text-sm font-bold text-gray-800">{hotel.krName}</div>
+                              <div className="font-kr text-xs text-gray-500">{hotel.krAddr}</div>
+                            </div>
+                          </div>
+                          {hotel.link && (
+                             <a 
+                              href={hotel.link} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center w-8 h-8 rounded-full bg-[#03C75A]/10 text-[#03C75A] hover:bg-[#03C75A] hover:text-white transition-colors ml-auto flex-shrink-0 active:scale-95"
+                            >
+                              <Icons.Navigation size={14} />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+  
+                {/* Pre-Trip Tasks */}
+                <section>
+                  <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                    <Icons.CheckSquare size={18} className="mr-2 text-green-500" /> 行前任務
+                  </h2>
+                  <div className="bg-white rounded-2xl p-2 shadow-sm border border-gray-100">
+                    {data.preTrip.map((task, idx) => (
+                      <div 
+                        key={idx} 
+                        onClick={() => toggleCheck(task.task)}
+                        className="flex items-start p-3 border-b border-gray-100 last:border-0 cursor-pointer active:bg-gray-50 rounded-lg"
+                      >
+                        <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center transition-colors ${checked[task.task] ? 'bg-green-500 border-green-500' : 'border-gray-300'}`}>
+                          {checked[task.task] && <div className="w-2.5 h-1.5 border-b-2 border-l-2 border-white rotate-[-45deg] mt-[-2px]" />}
+                        </div>
+                        <div>
+                          <div className={`text-sm ${checked[task.task] ? 'text-gray-400 line-through' : 'text-gray-700'}`}>{task.task}</div>
+                          {task.note && <div className="text-xs text-orange-500 mt-1">{task.note}</div>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+  
+                {/* Packing List */}
+                <section>
+                  <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                    <Icons.Briefcase size={18} className="mr-2 text-amber-500" /> 行李清單
+                  </h2>
+                  <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 grid grid-cols-2 gap-2">
+                    {data.packing.map((item, idx) => (
+                      <div 
+                        key={idx} 
+                        onClick={() => toggleCheck(item)}
+                        className={`text-xs p-2 rounded-lg border transition-all cursor-pointer ${checked[item] ? 'bg-gray-100 border-transparent text-gray-400' : 'bg-white border-gray-100 text-gray-600'}`}
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+  
+              </div>
+            );
+        };
+
         function BusanTripApp() {
           const [activeTab, setActiveTab] = useState('itinerary');
           const [currentDayId, setCurrentDayId] = useState(1);
@@ -1030,68 +1021,85 @@
                 <div className="absolute bottom-[-10%] left-[-20%] w-[600px] h-[600px] bg-orange-100/50 rounded-full blur-[120px] opacity-60" />
               </div>
 
-              {/* Main Content Area */}
-              <main className="relative z-10 max-w-md mx-auto min-h-screen bg-white/30 backdrop-blur-sm shadow-2xl border-x border-white/40">
-                
-                {/* Header */}
-                <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 backdrop-blur-md shadow-sm pt-12 pb-4' : 'bg-transparent pt-14 pb-2'} px-6`}>
-                  <div className="flex justify-between items-end">
-                    <div>
-                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Busan Trip 2025</p>
-                      <h1 className="text-3xl font-black text-gray-800 tracking-tight">
-                        {activeTab === 'itinerary' ? '每日行程' : 
-                         activeTab === 'tools' ? '旅程助手' : 
-                         activeTab === 'address' ? '地址簿' : '計算機'}
-                      </h1>
-                    </div>
-                    {activeTab === 'itinerary' && (
-                      <div className="flex flex-col items-end">
-                        <div className="flex items-center text-gray-600 bg-white/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/40 shadow-sm">
-                          <WeatherIcon icon={currentDay.weather.icon} className="mr-2 w-5 h-5" />
-                          <span className="text-sm font-bold">{currentDay.weather.temp}</span>
-                        </div>
-                      </div>
-                    )}
+              {/* Top Navigation Bar (Fixed) - MOVED TO TOP */}
+              <nav className="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-xl border-b border-gray-200 z-50 shadow-sm safe-top">
+                  <div className="flex justify-around items-center h-14 max-w-md mx-auto">
+                    <button 
+                      onClick={() => setActiveTab('itinerary')}
+                      className={`flex-1 flex flex-col items-center justify-center h-full transition-all ${activeTab === 'itinerary' ? 'text-blue-600' : 'text-gray-400'}`}
+                    >
+                      <Icons.Calendar size={20} className={activeTab === 'itinerary' ? 'mb-0.5' : ''} />
+                      <span className="text-[10px] font-medium">行程</span>
+                    </button>
+                    <button 
+                      onClick={() => setActiveTab('address')}
+                      className={`flex-1 flex flex-col items-center justify-center h-full transition-all ${activeTab === 'address' ? 'text-rose-600' : 'text-gray-400'}`}
+                    >
+                      <Icons.MapPin size={20} className={activeTab === 'address' ? 'mb-0.5' : ''} />
+                      <span className="text-[10px] font-medium">地址</span>
+                    </button>
+                    <button 
+                      onClick={() => setActiveTab('calc')}
+                      className={`flex-1 flex flex-col items-center justify-center h-full transition-all ${activeTab === 'calc' ? 'text-purple-600' : 'text-gray-400'}`}
+                    >
+                      <Icons.Calculator size={20} className={activeTab === 'calc' ? 'mb-0.5' : ''} />
+                      <span className="text-[10px] font-medium">換算</span>
+                    </button>
+                    <button 
+                      onClick={() => setActiveTab('tools')}
+                      className={`flex-1 flex flex-col items-center justify-center h-full transition-all ${activeTab === 'tools' ? 'text-amber-600' : 'text-gray-400'}`}
+                    >
+                      <Icons.Briefcase size={20} className={activeTab === 'tools' ? 'mb-0.5' : ''} />
+                      <span className="text-[10px] font-medium">助手</span>
+                    </button>
                   </div>
-                </header>
+              </nav>
 
+              {/* Main Content Area */}
+              <main className="relative z-10 max-w-md mx-auto min-h-screen bg-white/30 backdrop-blur-sm shadow-2xl border-x border-white/40 pt-14">
+                
                 {/* Content Body */}
-                <div className="px-6 py-4">
+                <div className="px-4 py-4">
                   
                   {activeTab === 'itinerary' ? (
-                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                    <div className="flex flex-row h-[calc(100vh-80px)]">
                       
-                      {/* Date Navigator */}
-                      <div className="flex overflow-x-auto pb-6 -mx-6 px-6 scrollbar-hide snap-x">
+                      {/* Left: Date Navigator (Vertical) */}
+                      <div className="flex flex-col overflow-y-auto w-20 flex-shrink-0 pr-2 space-y-3 pb-24 scrollbar-hide pt-2">
                         {TRIP_DATA.days.map((day) => (
                           <button
                             key={day.id}
                             onClick={() => setCurrentDayId(day.id)}
-                            className={`flex-shrink-0 snap-center mr-3 rounded-2xl p-3 w-20 flex flex-col items-center justify-center transition-all duration-300 border ${
+                            className={`flex-shrink-0 rounded-2xl p-2 w-full flex flex-col items-center justify-center transition-all duration-300 border h-20 ${
                               currentDayId === day.id 
                                 ? 'bg-gray-800 text-white shadow-lg scale-105 border-transparent' 
                                 : 'bg-white/60 text-gray-400 border-white/40 hover:bg-white/80'
                             }`}
                           >
                             <span className="text-[10px] font-medium opacity-80">{day.date.split(' ')[0]}</span>
-                            <span className="text-xl font-bold mt-1">{day.date.split('(')[1].replace(')', '')}</span>
+                            <span className="text-lg font-bold mt-0.5">{day.date.split('(')[1].replace(')', '')}</span>
                           </button>
                         ))}
                       </div>
 
-                      {/* Day Title */}
-                      <div className="mb-6">
-                         <h2 className="text-xl font-bold text-gray-700 flex items-center">
-                            <span className="w-1.5 h-6 bg-blue-500 rounded-full mr-3 block"></span>
-                            {currentDay.title}
-                         </h2>
-                      </div>
+                      {/* Right: Timeline Content */}
+                      <div className="flex-1 pl-2 overflow-y-auto pb-24 scrollbar-hide pt-2">
+                        <div className="mb-4 sticky top-0 bg-[#F2F4F8]/95 backdrop-blur-sm z-30 py-2 border-b border-gray-200/50 flex justify-between items-center">
+                           <h2 className="text-lg font-bold text-gray-700 flex items-center">
+                              <span className="w-1 h-5 bg-blue-500 rounded-full mr-2 block"></span>
+                              {currentDay.title}
+                           </h2>
+                           <div className="flex items-center text-gray-500 bg-white/50 px-2 py-1 rounded-full text-xs">
+                              <WeatherIcon icon={currentDay.weather.icon} className="mr-1 w-4 h-4" />
+                              {currentDay.weather.temp}
+                           </div>
+                        </div>
 
-                      {/* Timeline */}
-                      <div className="pl-3 pb-24">
-                        {currentDay.activities.map((activity, index) => (
-                          <ActivityCard key={index} activity={activity} />
-                        ))}
+                        <div className="pl-1">
+                          {currentDay.activities.map((activity, index) => (
+                            <ActivityCard key={index} activity={activity} />
+                          ))}
+                        </div>
                       </div>
 
                     </div>
@@ -1104,38 +1112,6 @@
                   )}
 
                 </div>
-
-                {/* Bottom Tab Navigation */}
-                <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] max-w-[380px] bg-white/90 backdrop-blur-xl rounded-full shadow-2xl border border-white/50 p-1.5 z-50 flex justify-between items-center text-[10px]">
-                  <button 
-                    onClick={() => setActiveTab('itinerary')}
-                    className={`flex-1 flex flex-col items-center justify-center py-2 rounded-full transition-all duration-300 ${activeTab === 'itinerary' ? 'text-blue-600 font-bold bg-blue-50' : 'text-gray-400 hover:text-gray-600'}`}
-                  >
-                    <Icons.Calendar size={20} className="mb-0.5" />
-                    <span>行程</span>
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('address')}
-                    className={`flex-1 flex flex-col items-center justify-center py-2 rounded-full transition-all duration-300 ${activeTab === 'address' ? 'text-rose-600 font-bold bg-rose-50' : 'text-gray-400 hover:text-gray-600'}`}
-                  >
-                    <Icons.MapPin size={20} className="mb-0.5" />
-                    <span>地址</span>
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('calc')}
-                    className={`flex-1 flex flex-col items-center justify-center py-2 rounded-full transition-all duration-300 ${activeTab === 'calc' ? 'text-purple-600 font-bold bg-purple-50' : 'text-gray-400 hover:text-gray-600'}`}
-                  >
-                    <Icons.Calculator size={20} className="mb-0.5" />
-                    <span>換算</span>
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('tools')}
-                    className={`flex-1 flex flex-col items-center justify-center py-2 rounded-full transition-all duration-300 ${activeTab === 'tools' ? 'text-amber-600 font-bold bg-amber-50' : 'text-gray-400 hover:text-gray-600'}`}
-                  >
-                    <Icons.Briefcase size={20} className="mb-0.5" />
-                    <span>助手</span>
-                  </button>
-                </nav>
 
               </main>
             </div>
